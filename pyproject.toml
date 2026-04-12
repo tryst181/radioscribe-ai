@@ -1,0 +1,40 @@
+[project]
+name = "radioscribe-ai"
+version = "1.0.0"
+description = "Production-grade AI Radiology Co-Pilot — CheXNet + Grad-CAM + Gemini LLM"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.10"
+authors = [
+    {name = "Yuval Doshi", email = "f20230186@goa.bits-pilani.ac.in"}
+]
+keywords = ["radiology", "medical-imaging", "deep-learning", "chest-xray", "grad-cam", "chexnet"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Healthcare Industry",
+    "Topic :: Scientific/Engineering :: Medical Science Apps.",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+
+[project.urls]
+Homepage = "https://github.com/tryst181/radioscribe-ai"
+Repository = "https://github.com/tryst181/radioscribe-ai"
+Issues = "https://github.com/tryst181/radioscribe-ai/issues"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "gpu: marks tests that require GPU",
+]
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
