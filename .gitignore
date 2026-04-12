@@ -1,0 +1,52 @@
+# Environment & Secrets
+.env
+.env.local
+.env.*.local
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+*.egg
+.Python
+venv/
+env/
+.venv/
+
+# Model Weights (large binary files)
+models/*.pth
+models/*.pt
+models/*.onnx
+models/*.bin
+
+# Storage & Uploads
+storage_bucket/
+radiscribe-images/
+*.dcm
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Testing
+.coverage
+htmlcov/
+.pytest_cache/
+.mypy_cache/
+
+# Docker
+docker-compose.override.yml
+
+# Logs
+*.log
