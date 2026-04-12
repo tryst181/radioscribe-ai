@@ -1,12 +1,18 @@
 <p align="center">
-  <img src="docs/assets/banner.png" alt="RadioScribe AI" width="800"/>
+  <a href="https://radioscribe.me">
+    <img src="https://radioscribe.me/favicon.svg" alt="RadioScribe AI Logo" width="120" style="margin-bottom: 20px;"/>
+  </a>
 </p>
 
-<h1 align="center">🩻 RadioScribe AI Engine</h1>
+<h1 align="center">
+  <a href="https://radioscribe.me">🩻 RadioScribe AI Engine</a>
+</h1>
 
 <p align="center">
   <strong>Production-Grade AI Radiology Co-Pilot</strong><br/>
-  <em>CheXNet (DenseNet-121) · Grad-CAM Explainability · Gemini LLM Reasoning · FastAPI</em>
+  <em>CheXNet (DenseNet-121) · Grad-CAM Explainability · Gemini LLM Reasoning · FastAPI</em><br/>
+  <br/>
+  🌐 <strong>Live Demo: <a href="https://radioscribe.me">radioscribe.me</a></strong>
 </p>
 
 <p align="center">
