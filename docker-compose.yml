@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  radiscribe-ai:
+    build: .
+    container_name: radiscribe_ai_engine
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    volumes:
+      - ./models:/app/models # Mount models directory
+      - ./storage_bucket:/app/storage_bucket # Persistent storage for images
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [ gpu ]
+  # Optional local DB for testing if not using remote Supabase
+  # db:
+  #   image: postgres:15
+  #   environment:
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_PASSWORD: password
+  #     POSTGRES_DB: radiscribe_ai

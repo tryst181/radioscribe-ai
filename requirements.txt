@@ -1,0 +1,32 @@
+fastapi>=0.110.0
+uvicorn[standard]>=0.29.0
+pydantic>=2.7.0
+pydantic-settings>=2.2.0
+python-multipart
+# AI / ML
+torch>=2.2.0
+torchvision>=0.17.0
+numpy<2.0.0
+pillow
+opencv-python-headless
+pydicom
+python-gdcm
+pylibjpeg
+torchxrayvision>=1.2.0
+# LLM
+google-generativeai>=0.4.0
+# Database
+supabase>=2.4.0
+sqlalchemy
+psycopg2-binary
+# Utils
+loguru
+python-dotenv
+httpx
+requests
+# Testing
+pytest
+pytest-asyncio
+# Demo
+streamlit>=1.32.0
+watchdog
