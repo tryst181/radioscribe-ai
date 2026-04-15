@@ -10,7 +10,7 @@
 
 <p align="center">
   <strong>Production-Grade AI Radiology Co-Pilot</strong><br/>
-  <em>CheXNet (DenseNet-121) · Grad-CAM Explainability · Gemini LLM Reasoning · FastAPI</em><br/>
+  <em>CheXNet (DenseNet-121) · Grad-CAM Explainability · Local/Open-Weight LLM Reasoning · FastAPI</em><br/>
   <br/>
   🌐 <strong>Live Demo: <a href="https://radioscribe.me">radioscribe.me</a></strong>
 </p>
@@ -19,7 +19,7 @@
   <a href="#"><img src="https://img.shields.io/badge/python-3.10+-blue?style=for-the-badge&logo=python&logoColor=white" alt="Python"/></a>
   <a href="#"><img src="https://img.shields.io/badge/PyTorch-2.2+-ee4c2c?style=for-the-badge&logo=pytorch&logoColor=white" alt="PyTorch"/></a>
   <a href="#"><img src="https://img.shields.io/badge/FastAPI-0.110+-009688?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI"/></a>
-  <a href="#"><img src="https://img.shields.io/badge/Gemini_2.5-Pro-4285F4?style=for-the-badge&logo=google&logoColor=white" alt="Gemini"/></a>
+  <a href="#"><img src="https://img.shields.io/badge/LLM-Local%2FOSS-6f42c1?style=for-the-badge" alt="Local OSS LLM"/></a>
   <a href="#"><img src="https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker"/></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License"/></a>
 </p>
@@ -37,7 +37,7 @@
 
 ## Overview
 
-**RadioScribe AI** is a production-grade medical imaging analysis engine that transforms Chest X-rays into structured radiology reports. It combines deep learning (CheXNet/DenseNet-121) with LLM-powered clinical reasoning (Google Gemini) to produce draft findings — complete with Grad-CAM visual explainability — in under 3 seconds.
+**RadioScribe AI** is a production-grade medical imaging analysis engine that transforms Chest X-rays into structured radiology reports. It combines deep learning (CheXNet/DenseNet-121) with local/open-weight clinical reasoning to produce draft findings — complete with Grad-CAM visual explainability.
 
 > ⚠️ **Disclaimer**: This system is designed for **clinical decision support only**. It does not provide diagnoses. All outputs require radiologist review. See [Safety Architecture](#safety-architecture).
 
@@ -48,7 +48,7 @@
 | Feature | Description | Technology |
 |---------|-------------|------------|
 | 🔬 **Multi-Pathology Detection** | Detects 14 chest pathologies simultaneously | DenseNet-121 (CheXNet) via TorchXRayVision |
-| 🧠 **Clinical Reasoning** | Generates structured radiology report drafts | Google Gemini 2.5 Pro |
+| 🧠 **Clinical Reasoning** | Generates structured radiology report drafts | Local/Open-Weight LLM (or Ollama) |
 | 🔥 **Grad-CAM Explainability** | Visual heatmaps showing model attention regions | Custom Grad-CAM on DenseBlock4 |
 | 🩺 **DICOM Support** | Native DICOM ingestion with metadata extraction | pydicom + GDCM |
 | 🔒 **Safety-First Design** | Blocking explainability — no report without heatmap | Strict pipeline architecture |
@@ -81,7 +81,7 @@ graph TB
         end
 
         subgraph "3. Reasoning Service"
-            H["Gemini 2.5 Pro<br/>Structured JSON Output"]
+            H["Local/Open-Weight LLM<br/>Structured JSON Output"]
         end
 
         subgraph "4. Response Builder"
@@ -131,7 +131,7 @@ RadioScribe enforces a **strict safety pipeline** — this is not a standard ML 
 
 - Python 3.10+
 - CUDA-compatible GPU (recommended) or CPU
-- Google API Key ([Get one here](https://aistudio.google.com/app/apikey))
+- Optional Ollama runtime for local text/vision generation
 
 ### 1. Clone & Install
 
@@ -147,7 +147,8 @@ pip install -r requirements.txt
 ```bash
 cp .env.example .env
 # Edit .env with your credentials:
-#   GOOGLE_API_KEY=your_gemini_api_key
+#   LOCAL_LLM_PROVIDER=mock|ollama
+#   OLLAMA_BASE_URL=http://localhost:11434
 #   SUPABASE_URL=your_supabase_url
 #   SUPABASE_KEY=your_supabase_key
 ```
@@ -295,7 +296,7 @@ radioscribe-ai/
 │   └── services/
 │       ├── explanation/    # Grad-CAM implementation
 │       ├── ingestion/     # DICOM/image processing & storage
-│       ├── reasoning/     # Gemini LLM report generation
+│       ├── reasoning/     # Local/Open-Weight LLM report generation
 │       └── vision/        # CheXNet inference & model loading
 ├── tests/                 # Unit & integration tests
 ├── docs/                  # Architecture & API documentation
@@ -316,7 +317,7 @@ radioscribe-ai/
 | **API** | FastAPI + Uvicorn | Async HTTP server with OpenAPI docs |
 | **Vision** | PyTorch + TorchXRayVision | DenseNet-121 inference (14 pathologies) |
 | **Explainability** | Custom Grad-CAM | Attention heatmaps on DenseBlock4 |
-| **Reasoning** | Google Gemini 2.5 Pro | Structured clinical report drafting |
+| **Reasoning** | Local/Open-Weight LLM | Structured clinical report drafting |
 | **Database** | PostgreSQL / Supabase | Studies, predictions, feedback storage |
 | **Storage** | Content-addressed filesystem | SHA256-based image deduplication |
 | **Deployment** | Docker + NVIDIA CUDA | GPU-accelerated containerized deployment |
