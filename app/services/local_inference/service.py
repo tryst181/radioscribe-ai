@@ -96,6 +96,7 @@ class LocalInferenceService:
                 images=[image_base64.split(",", 1)[1] if "," in image_base64 else image_base64],
             )
 
+        # Lazy import avoids heavy torch model loading during non-vision paths/tests.
         from app.services.vision.service import vision_service
 
         image = self._to_pil_image(image_base64)

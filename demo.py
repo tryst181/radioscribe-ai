@@ -15,7 +15,7 @@ st.set_page_config(page_title="RadiScribe AI Engine", layout="wide", page_icon="
 with st.sidebar:
     st.image("https://cdn-icons-png.flaticon.com/512/3050/3050525.png", width=100)
     st.title("RadiScribe AI")
-    st.caption("Engine v1.1 (CheXNet + Local OSS Inference)")
+    st.caption("Engine v1.1 (CheXNet + Local/Open-Weight Inference)")
     st.divider()
     
     st.header("Upload X-Ray")

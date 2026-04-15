@@ -8,6 +8,7 @@ from unittest.mock import MagicMock, patch
 import io
 import numpy as np
 from PIL import Image
+import os
 
 
 @pytest.fixture
@@ -23,3 +24,9 @@ def sample_image_bytes():
 def sample_pil_image():
     """Generate a sample PIL Image."""
     return Image.fromarray(np.random.randint(0, 255, (224, 224), dtype=np.uint8), mode="L")
+
+
+@pytest.fixture(autouse=True)
+def required_env_vars(monkeypatch):
+    monkeypatch.setenv("SUPABASE_URL", os.getenv("SUPABASE_URL", "https://test.supabase.co"))
+    monkeypatch.setenv("SUPABASE_KEY", os.getenv("SUPABASE_KEY", "test-key"))

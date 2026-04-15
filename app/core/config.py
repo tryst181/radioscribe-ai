@@ -8,8 +8,8 @@ class Settings(BaseSettings):
     DEBUG: bool = False
     
     # Database (Supabase)
-    SUPABASE_URL: str = Field("https://example.supabase.co", env="SUPABASE_URL")
-    SUPABASE_KEY: str = Field("local-dev-key", env="SUPABASE_KEY")
+    SUPABASE_URL: str = Field(..., env="SUPABASE_URL")
+    SUPABASE_KEY: str = Field(..., env="SUPABASE_KEY")
     
     # ML Models
     MODEL_PATH_CHEXNET: str = "models/chexnet.pth"
