@@ -15,7 +15,7 @@ st.set_page_config(page_title="RadiScribe AI Engine", layout="wide", page_icon="
 with st.sidebar:
     st.image("https://cdn-icons-png.flaticon.com/512/3050/3050525.png", width=100)
     st.title("RadiScribe AI")
-    st.caption("Engine v1.0 (CheXNet + Gemini 2.5)")
+    st.caption("Engine v1.1 (CheXNet + Local OSS Inference)")
     st.divider()
     
     st.header("Upload X-Ray")
@@ -25,6 +25,16 @@ with st.sidebar:
         st.info("Downloading sample...")
         # Redirect to external sample
         st.markdown("[Click to get Sample](https://raw.githubusercontent.com/ieee8023/covid-chestxray-dataset/master/images/01E392EE-69F9-4E33-BFCE-E5C968654078.jpeg)")
+
+    st.divider()
+    st.header("Demo Section")
+    demo_video_url = st.text_input("Demo video URL", value="")
+    if demo_video_url:
+        st.video(demo_video_url)
+
+    st.header("Partners")
+    partners_raw = st.text_area("Add partner names (one per line)", value="Hospital Research Lab\nImaging Center")
+    partners = [p.strip() for p in partners_raw.splitlines() if p.strip()]
 
 # Main
 st.title("🩻 Medical Image Analysis Console")
@@ -158,3 +168,15 @@ else:
     c1.metric("Status", "Online", delta="Healthy")
     c2.metric("Active Model", "CheXNet (XRV)")
     c3.metric("Safety Mode", "Strict (Blocking)")
+    st.markdown("### Product Metrics")
+    m1, m2, m3 = st.columns(3)
+    m1.metric("Supported Modalities", "Chest X-Ray")
+    m2.metric("Embedding Dimension", "768")
+    m3.metric("Inference Stack", "Local/OSS")
+
+    st.markdown("### Partnered With")
+    if partners:
+        for partner in partners:
+            st.markdown(f"- {partner}")
+    else:
+        st.caption("Add partners from the sidebar.")

@@ -1,7 +1,7 @@
 [project]
 name = "radioscribe-ai"
 version = "1.0.0"
-description = "Production-grade AI Radiology Co-Pilot — CheXNet + Grad-CAM + Gemini LLM"
+description = "Production-grade AI Radiology Co-Pilot — CheXNet + Grad-CAM + Local/Open-Weight LLM"
 readme = "README.md"
 license = {text = "MIT"}
 requires-python = ">=3.10"

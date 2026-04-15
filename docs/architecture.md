@@ -7,7 +7,7 @@ RadioScribe AI is a **safety-first** medical imaging analysis engine built on a 
 ## Pipeline Flow
 
 ```
-Image Upload → Ingestion → Vision (CheXNet) → Explainability (Grad-CAM) → Reasoning (Gemini) → Report
+Image Upload → Ingestion → Vision (CheXNet) → Explainability (Grad-CAM) → Reasoning (Local/Open-Weight LLM) → Report
 ```
 
 ### Key Design Decisions
@@ -42,7 +42,7 @@ Image Upload → Ingestion → Vision (CheXNet) → Explainability (Grad-CAM) �
 
 ### Reasoning Service (`app/services/reasoning/`)
 
-- **Model**: Google Gemini 2.5 Pro
+- **Model**: Local/Open-Weight LLM (or Ollama endpoint)
 - **Input**: Structured findings array with labels, probabilities, and confidence levels
 - **Output**: Structured JSON with impression, findings narrative, recommendations, differential diagnosis
 - **Fallback**: Rule-based mock generator when API is unavailable

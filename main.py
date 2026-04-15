@@ -10,6 +10,7 @@ from app.services.ingestion.service import IngestionService
 from app.services.ingestion.storage import storage_service
 from app.services.vision.service import vision_service
 from app.services.reasoning.service import reasoning_service
+from app.services.local_inference.service import local_inference_service
 from app.schemas.response import AnalyzeResponse, VisionFinding, ExplainabilityOutput, ReasoningOutput, MetaData
 
 logger = logging.getLogger(__name__)
@@ -44,6 +45,37 @@ class FeedbackRequest(BaseModel):
     feedback_type: Literal["ACCEPTED", "CORRECTED", "REJECTED"]
     correction_details: dict | None = None
     user_id: str | None = None
+
+
+class VisionAnalyzeRequest(BaseModel):
+    image_base64: str
+    prompt: str | None = None
+
+
+class BodyPartRequest(BaseModel):
+    image_base64: str
+
+
+class AnnotateRequest(BaseModel):
+    findings: list[dict]
+
+
+class TextReportRequest(BaseModel):
+    transcript: str
+    findings: list[dict] = []
+
+
+class EscalateRequest(BaseModel):
+    findings: list[dict]
+    context: str | None = None
+
+
+class AudioTranscribeRequest(BaseModel):
+    audio_base64: str
+
+
+class EmbedRequest(BaseModel):
+    text: str
 
 def map_confidence(prob: float) -> str:
     if prob > 0.85: return "HIGH"
@@ -168,6 +200,70 @@ async def submit_feedback(feedback: FeedbackRequest, background_tasks: Backgroun
     logger.info(f"FEEDBACK RECEIVED: {feedback.model_dump_json()}")
     return {"status": "accepted"}
 
+
+@app.post("/vision/analyze")
+async def vision_analyze(req: VisionAnalyzeRequest):
+    try:
+        result = await local_inference_service.analyze_vision(req.image_base64, req.prompt)
+        return result
+    except Exception as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+
+
+@app.post("/vision/bodypart")
+async def vision_bodypart(req: BodyPartRequest):
+    try:
+        body_part = await local_inference_service.detect_bodypart(req.image_base64)
+        return {"body_part": body_part}
+    except Exception as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+
+
+@app.post("/vision/annotate")
+async def vision_annotate(req: AnnotateRequest):
+    annotations = await local_inference_service.generate_annotations(req.findings)
+    return {"annotations": annotations}
+
+
+@app.post("/text/report")
+async def text_report(req: TextReportRequest):
+    findings = [
+        VisionFinding(
+            label=item.get("label", "Unknown"),
+            probability=float(item.get("probability", 0.0)),
+            confidence=map_confidence(float(item.get("probability", 0.0))),
+        )
+        for item in req.findings
+    ]
+    result = await local_inference_service.generate_report(findings)
+    return result.model_dump()
+
+
+@app.post("/text/escalate")
+async def text_escalate(req: EscalateRequest):
+    findings = [
+        VisionFinding(
+            label=item.get("label", "Unknown"),
+            probability=float(item.get("probability", 0.0)),
+            confidence=map_confidence(float(item.get("probability", 0.0))),
+        )
+        for item in req.findings
+    ]
+    result = await local_inference_service.generate_report(findings)
+    return {"escalated_report": result.model_dump(), "context": req.context}
+
+
+@app.post("/audio/transcribe")
+async def audio_transcribe(req: AudioTranscribeRequest):
+    transcript = await local_inference_service.transcribe_audio(req.audio_base64)
+    return {"transcript": transcript}
+
+
+@app.post("/embed")
+async def embed_text(req: EmbedRequest):
+    embedding = await local_inference_service.embed_text(req.text)
+    return {"embedding": embedding, "dimension": len(embedding)}
+
 @app.get("/health")
 def health_check():
-    return {"status": "healthy", "gpu": vision_service.device.type}
+    return {"status": "ok", "gpu": vision_service.device.type}

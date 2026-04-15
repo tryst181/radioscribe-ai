@@ -36,7 +36,7 @@ class VisionFinding(BaseModel):
 
 class AIReasoning(BaseModel):
     """
-    Output from Gemini 2.5 Pro (Language Model).
+    Output from local/open-weight reasoning model (Language Model).
     """
     impression: str
     findings_narrative: str
