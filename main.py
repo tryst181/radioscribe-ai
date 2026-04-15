@@ -263,4 +263,4 @@ async def embed_text(req: EmbedRequest):
 
 @app.get("/health")
 def health_check():
-    return {"status": "ok", "legacy_status": "ok", "gpu": vision_service.device.type}
+    return {"status": "ok", "gpu": vision_service.device.type}

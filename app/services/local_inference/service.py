@@ -22,7 +22,10 @@ class LocalInferenceService:
 
     def _decode_base64(self, payload: str) -> bytes:
         raw = payload.split(",", 1)[1] if "," in payload else payload
-        return base64.b64decode(raw, validate=True)
+        try:
+            return base64.b64decode(raw, validate=True)
+        except Exception as exc:
+            raise ValueError("Invalid base64 payload") from exc
 
     def _to_pil_image(self, image_base64: str) -> Image.Image:
         return Image.open(io.BytesIO(self._decode_base64(image_base64))).convert("L")
@@ -142,6 +145,10 @@ class LocalInferenceService:
             return ""
 
     def _hash_embedding(self, text: str, dim: int) -> list[float]:
+        """
+        Deterministic low-cost fallback embedding when transformer models are unavailable.
+        This is token-hash based and is less semantically expressive than neural embeddings.
+        """
         vec = np.zeros(dim, dtype=np.float32)
         for token in text.lower().split():
             idx = int(hashlib.sha256(token.encode("utf-8")).hexdigest(), 16) % dim

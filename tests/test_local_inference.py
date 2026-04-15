@@ -54,3 +54,18 @@ class TestLocalInferenceService:
 
         assert "analysis_text" in output
         assert output["findings"][0]["label"] == "Pneumonia"
+
+    def test_embed_text_falls_back_when_sentence_transformer_unavailable(self, monkeypatch):
+        service = LocalInferenceService()
+
+        broken_module = types.ModuleType("sentence_transformers")
+
+        class _Broken:
+            def __init__(self, *_args, **_kwargs):
+                raise RuntimeError("model unavailable")
+
+        broken_module.SentenceTransformer = _Broken
+        monkeypatch.setitem(sys.modules, "sentence_transformers", broken_module)
+
+        vector = asyncio.run(service.embed_text("pneumonia finding"))
+        assert len(vector) == 768

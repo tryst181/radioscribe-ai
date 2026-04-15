@@ -8,7 +8,6 @@ from unittest.mock import MagicMock, patch
 import io
 import numpy as np
 from PIL import Image
-import os
 
 
 @pytest.fixture
@@ -28,5 +27,5 @@ def sample_pil_image():
 
 @pytest.fixture(autouse=True)
 def required_env_vars(monkeypatch):
-    monkeypatch.setenv("SUPABASE_URL", os.getenv("SUPABASE_URL", "https://test.supabase.co"))
-    monkeypatch.setenv("SUPABASE_KEY", os.getenv("SUPABASE_KEY", "test-key"))
+    monkeypatch.setenv("SUPABASE_URL", "https://test.supabase.co")
+    monkeypatch.setenv("SUPABASE_KEY", "test-key")
