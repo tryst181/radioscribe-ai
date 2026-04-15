@@ -27,7 +27,7 @@ with st.sidebar:
         st.markdown("[Click to get Sample](https://raw.githubusercontent.com/ieee8023/covid-chestxray-dataset/master/images/01E392EE-69F9-4E33-BFCE-E5C968654078.jpeg)")
 
     st.divider()
-    st.header("Demo Section")
+    st.header("Demo Video")
     demo_video_url = st.text_input("Demo video URL", value="")
     if demo_video_url:
         st.video(demo_video_url)

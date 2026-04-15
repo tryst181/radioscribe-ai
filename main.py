@@ -77,6 +77,17 @@ class AudioTranscribeRequest(BaseModel):
 class EmbedRequest(BaseModel):
     text: str
 
+
+def _to_vision_findings(items: list[dict]) -> list[VisionFinding]:
+    return [
+        VisionFinding(
+            label=item.get("label", "Unknown"),
+            probability=float(item.get("probability", 0.0)),
+            confidence=map_confidence(float(item.get("probability", 0.0))),
+        )
+        for item in items
+    ]
+
 def map_confidence(prob: float) -> str:
     if prob > 0.85: return "HIGH"
     if prob > 0.50: return "MODERATE"
@@ -227,28 +238,14 @@ async def vision_annotate(req: AnnotateRequest):
 
 @app.post("/text/report")
 async def text_report(req: TextReportRequest):
-    findings = [
-        VisionFinding(
-            label=item.get("label", "Unknown"),
-            probability=float(item.get("probability", 0.0)),
-            confidence=map_confidence(float(item.get("probability", 0.0))),
-        )
-        for item in req.findings
-    ]
+    findings = _to_vision_findings(req.findings)
     result = await local_inference_service.generate_report(findings)
     return result.model_dump()
 
 
 @app.post("/text/escalate")
 async def text_escalate(req: EscalateRequest):
-    findings = [
-        VisionFinding(
-            label=item.get("label", "Unknown"),
-            probability=float(item.get("probability", 0.0)),
-            confidence=map_confidence(float(item.get("probability", 0.0))),
-        )
-        for item in req.findings
-    ]
+    findings = _to_vision_findings(req.findings)
     result = await local_inference_service.generate_report(findings)
     return {"escalated_report": result.model_dump(), "context": req.context}
 
@@ -266,4 +263,4 @@ async def embed_text(req: EmbedRequest):
 
 @app.get("/health")
 def health_check():
-    return {"status": "ok", "legacy_status": "healthy", "gpu": vision_service.device.type}
+    return {"status": "ok", "legacy_status": "ok", "gpu": vision_service.device.type}
